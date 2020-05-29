@@ -46,9 +46,25 @@ class App extends Component {
   };
 
   handleDecrementQuantity = (id) => {
-    // Your Code Here!
-    // Do the same as handleIncrementQuantity, but decrement it instead
-    // Remember that you should not decrement below zero!
+    this.setState((state) => {
+      const newList = state.cart.map((item) => {
+        if (item.id === id && item.quantity > 0) {
+          return Object.assign({}, item, { quantity: item.quantity - 1 });
+        } else {
+          return item;
+        }
+      });
+      return {
+        cart: newList,
+      };
+    });
+  };
+
+  handleIsOnMailingList = (event) => {
+    this.setState({
+      isOnMailingList: event.target.checked,
+    });
+    console.log(this.state.isOnMailingList);
   };
 
   handleCheckout = () => {
@@ -67,7 +83,11 @@ class App extends Component {
         <ul className="list">
           {this.state.cart.map((item) => (
             <li key={item.id}>
-              <Product your props here />
+              <Product
+                item={item}
+                onIncrementQuantity={this.handleIncrementQuantity}
+                onDecrementQuantity={this.handleDecrementQuantity}
+              />
             </li>
           ))}
         </ul>
@@ -75,13 +95,12 @@ class App extends Component {
           <label>
             <input
               type="checkbox"
-              defaultChecked={this.stateIncisOnMailingList}
-              onChange={(event) =>
-                // Your code here!
-                // Use setState to update the flag in state for the checkbox
-                // Hint: use event.target.checked
-                this.setState()
-              }
+              defaultChecked={this.state.isOnMailingList}
+              onChange={this.handleIsOnMailingList}
+              value={this.state.isOnMailingList}
+              // Your code here!
+              // Use setState to update the flag in state for the checkbox
+              // Hint: use event.target.checked
             />
             Sign me up for the mailing list!
           </label>
